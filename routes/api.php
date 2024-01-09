@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +61,7 @@ Route::get(
     })->middleware(\App\Http\Middleware\TenancySetup::class);
 
 Route::post('/login', function (Request $request) {
-    $user = \App\Models\User::factory()->create();
+    $user = \App\Models\User::where('email', $request->username)->first();
     $token = $user->createToken('token-name')->plainTextToken;
     $tenant = \App\Models\Tenant::find($request->school_name);
     $response = [
@@ -68,7 +69,7 @@ Route::post('/login', function (Request $request) {
         'message' => "Schools retrieved successfully.",
         'data' => [
             'token' => $token,
-            'user' => $user,
+            'user' => new \App\Http\Resources\UserResource($user),
             'tenant_id' => Crypt::encryptString($tenant->id),
         ],
     ];
