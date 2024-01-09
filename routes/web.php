@@ -19,6 +19,10 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::view('tenant', 'pages.tenant.create')
+    ->middleware(['auth', 'verified'])
+    ->name('tenant.create');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
