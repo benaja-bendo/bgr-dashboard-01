@@ -15,17 +15,20 @@ class RoleHasPermissionTenantSeeder extends Seeder
     public function run(): void
     {
         foreach (RolesEnum::cases() as $role) {
-            if ($role->value === RolesEnum::student->value) {
-                // add permissions to student
-            } elseif ($role->value === RolesEnum::teacher->value) {
-                // add permissions to teacher
-            } elseif ($role->value === RolesEnum::admin_school->value) {
-                // TODO test relation
-//                $role = Role::findByName($role->value);
-//                $role->givePermissionTo('read_student');
-//                $role->givePermissionTo('create_student');
-//                $role->givePermissionTo('update_student');
-//                $role->givePermissionTo('delete_student');
+            switch ($role->value) {
+                case RolesEnum::student->value:
+                    // add permissions to student
+                    break;
+                case RolesEnum::teacher->value:
+                    // add permissions to teacher
+                    break;
+                case RolesEnum::admin_school->value:
+                    $role = Role::findByName($role->value);
+                    $role->givePermissionTo('read_student');
+                    $role->givePermissionTo('create_student');
+                    $role->givePermissionTo('update_student');
+                    $role->givePermissionTo('delete_student');
+                    break;
             }
         }
     }
