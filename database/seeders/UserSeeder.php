@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'email' => 'root@gmail.com',
         ]);
         $root->assignRole(RolesEnum::root->value);
-         root->address()->create();
-         $root->phoneNumber()->create();
+//         root->address()->create();
+//         $root->phoneNumber()->create();
     }
 }
