@@ -22,9 +22,13 @@ Route::prefix('v1')->group(function () {
             '/test',
             function (Request $request) {
                 $users = User::all();
-                return response()->json([
-                    'users' => $users,
-                ], 200);
+                $response = [
+                    'success' => true,
+                    'message' => "Users retrieved successfully.",
+                    'data' => $users,
+                ];
+
+                return response()->json($response, 200);
             }
         );
 
