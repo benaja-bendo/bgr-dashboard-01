@@ -13,7 +13,7 @@ Route::prefix('v1')->group(function () {
 
     Route::group(['prefix' => 'auth'], function () {
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
-        Route::post('logout', [AuthenticatedSessionController::class, 'logout'])->middleware('auth:sanctum');
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy']);
     });
 
     Route::middleware(['tenancy.setup'])->group(function () {

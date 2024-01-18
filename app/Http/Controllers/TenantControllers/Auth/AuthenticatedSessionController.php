@@ -52,8 +52,9 @@ class AuthenticatedSessionController extends ApiController
      */
     public function destroy(Request $request): JsonResponse
     {
-        $user = $request->user(); // get the authenticated user
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete(); // delete the current token
+        // TODO: Implement destroy() method.
+//        $user = $request->user(); // get the authenticated user
+//        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete(); // delete the current token
 
         return $this->successResponse(null, 'User logged out successfully.');
     }
