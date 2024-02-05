@@ -13,7 +13,7 @@ Route::prefix('v1')->group(function () {
 
     Route::group(['prefix' => 'auth'], function () {
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
-        Route::post('logout', [AuthenticatedSessionController::class, 'logout'])->middleware('auth:sanctum');
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy']);
     });
 
     Route::middleware(['tenancy.setup'])->group(function () {
@@ -22,13 +22,18 @@ Route::prefix('v1')->group(function () {
             '/test',
             function (Request $request) {
                 $users = User::all();
-                return response()->json([
-                    'users' => $users,
-                ], 200);
+                $response = [
+                    'success' => true,
+                    'message' => "Users retrieved successfully.",
+                    'data' => $users,
+                ];
+
+                return response()->json($response, 200);
             }
         );
 
-        Route::apiResource('/students', StudentController::class)->middleware('auth:sanctum');
+        Route::post('/students/deletes', [StudentController::class, 'destroys']);
+        Route::apiResource('/students', StudentController::class);
 
     });
 

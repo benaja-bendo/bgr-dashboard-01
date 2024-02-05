@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\RolesEnum;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UsersTableSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,9 +14,11 @@ class UsersTableSeeder extends Seeder
     public function run(): void
     {
         $root = \App\Models\User::factory()->create([
-            'name' => 'Root User',
+            'last_name' => 'Root User',
             'email' => 'root@gmail.com',
         ]);
-        $root->assignRole(\App\Constants\RoleConstants::ROOT);
+        $root->assignRole(RolesEnum::root->value);
+//         root->address()->create();
+//         $root->phoneNumber()->create();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TenantControllers\Auth;
 
+use App\Http\Resources\UserTenantRessource;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,7 @@ class AuthenticatedSessionController extends ApiController
             return $this->successResponse(
                 [
                     'token' => $token,
-                    'user' => $user,
+                    'user' => new UserTenantRessource($user),
                     'tenant_id' => Crypt::encryptString($tenant->id),
                 ], 'User logged in successfully.');
         }
@@ -52,8 +53,9 @@ class AuthenticatedSessionController extends ApiController
      */
     public function destroy(Request $request): JsonResponse
     {
-        $user = $request->user(); // get the authenticated user
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete(); // delete the current token
+        // TODO: Implement destroy() method.
+//        $user = $request->user(); // get the authenticated user
+//        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete(); // delete the current token
 
         return $this->successResponse(null, 'User logged out successfully.');
     }

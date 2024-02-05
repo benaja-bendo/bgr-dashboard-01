@@ -12,10 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // WithoutModelEvents::class;
         $this->call([
             RoleSeeder::class,
-            UsersTableSeeder::class,
+            PermissionSeeder::class,
+            RoleHasPermissionSeeder::class,
+            UserSeeder::class,
+            TenantSeeder::class,
         ]);
     }
 }
