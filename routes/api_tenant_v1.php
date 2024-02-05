@@ -32,7 +32,8 @@ Route::prefix('v1')->group(function () {
             }
         );
 
-        Route::apiResource('/students', StudentController::class)->middleware('auth:sanctum');
+        Route::post('/students/deletes', [StudentController::class, 'destroys']);
+        Route::apiResource('/students', StudentController::class);
 
     });
 

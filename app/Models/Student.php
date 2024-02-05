@@ -14,6 +14,14 @@ class Student extends Model
     protected $fillable = [
         'school_id',
     ];
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'deleted_at',
+    ];
 
     public function user() :belongsTo
     {

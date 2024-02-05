@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\TenantControllers;
 
+use App\Enums\RolesEnum;
 use App\Http\Controllers\ApiController;
+use App\Http\Resources\StudentTenantRessource;
+use App\Http\Resources\UserTenantRessource;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 
 class StudentController extends ApiController
@@ -20,7 +24,10 @@ class StudentController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $students = Student::all();
-        return $this->successResponse(data: $students, message: "Students retrieved successfully.");
+        return $this->successResponse(
+            data: StudentTenantRessource::collection($students),
+//            data: new UserTenantRessourceCollection($students),
+            message: "Students retrieved successfully.");
     }
 
     /**
@@ -28,19 +35,33 @@ class StudentController extends ApiController
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required',
+            'last_name' => 'required',
+            'first_name' => 'required',
+            'gender' => 'required|in:male,female,other',
+            'birth_date' => 'nullable',
             'email' => 'required',
-            'password' => 'required'
         ]);
 
-        $student = User::create($validated);
-        $student->assignRole('student');
-        $student->student()->create();
-        return $this->successResponse(data: $student, message: "Student created successfully.");
+        $password = Hash::make($this->generateSecurePassword());
+        $userStudent = User::create([
+            'last_name' => $validated['last_name'],
+            'first_name' => $validated['first_name'],
+            'gender' => $validated['gender'],
+            'birth_date' => $validated['birth_date'],
+            'email' => $validated['email'],
+            'password' => $password,
+        ]);
+        $userStudent->assignRole(RolesEnum::student->value);
+        $userStudent->student()->create();
+        return $this->successResponse(
+            data: null,
+            message: "Student created successfully.",
+            code: 201);
     }
 
     /**
@@ -79,13 +100,41 @@ class StudentController extends ApiController
      * Remove the specified resource from storage.
      *
      * @param Request $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
-        $student = Student::find($request->id);
-        $student->delete();
+        Student::findOrFail($id)->delete();
         return $this->successResponse(data: null, message: "Student deleted successfully.");
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function destroys(Request $request): JsonResponse
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+        ]);
+        $ids_students = $request->ids;
+        if (!empty($ids_students)) {
+            Student::whereIn('id', $ids_students)->delete();
+            return $this->successResponse(data: null, message: "Students deleted successfully.");
+        }
+        return $this->errorResponse(error: "No students selected", code: 404);
+    }
+
+    /**
+     * @param int $length Length of the password to generate
+     * @return string
+     * @throws \Exception
+     */
+    private function generateSecurePassword(int $length = 16): string
+    {
+        return substr(bin2hex(random_bytes($length)), 0, $length);
+    }
 }

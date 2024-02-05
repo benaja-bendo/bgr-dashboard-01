@@ -16,7 +16,7 @@ class UserTenantSeeder extends Seeder
     {
         foreach (RolesEnum::cases() as $role) {
             if ($role->has(RolesEnum::student->value)) {
-                $user = User::factory(10)->create()
+                $user = User::factory(100)->create()
                     ->each(function ($user) {
                         $user->assignRole(RolesEnum::student->value);
                         $user->student()->create();
