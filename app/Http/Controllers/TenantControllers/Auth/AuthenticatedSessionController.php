@@ -28,13 +28,17 @@ class AuthenticatedSessionController extends ApiController
         ]);
 
         $tenant = Tenant::find($request->school_name);
+        if (!$tenant) {
+            return $this->errorResponse('Invalid credentials', [], 401);
+        }
         tenancy()->initialize($tenant);
 
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('token-name')->plainTextToken;
+            $tokenName = 'token-' . $user->id . '-' . now()->timestamp;
+            $token = $user->createToken($tokenName)->plainTextToken;
             return $this->successResponse(
                 [
                     'token' => $token,
