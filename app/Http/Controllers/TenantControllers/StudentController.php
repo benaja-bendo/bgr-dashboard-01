@@ -122,7 +122,7 @@ class StudentController extends ApiController
         ]);
         $ids_students = $request->ids;
         if (!empty($ids_students)) {
-            Student::whereIn('id', $ids_students)->delete();
+            User::whereIn('id', $ids_students)->delete();
             return $this->successResponse(data: null, message: "Students deleted successfully.");
         }
         return $this->errorResponse(error: "No students selected", code: 404);

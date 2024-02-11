@@ -50,11 +50,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function student(): HasOne
-    {
-        return $this->hasOne(Student::class);
-    }
-
     public function numberPhone(): HasMany
     {
         return $this->hasMany(NumberPhone::class, 'user_id');

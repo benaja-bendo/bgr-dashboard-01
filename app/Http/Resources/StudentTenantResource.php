@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StudentTenantRessource extends JsonResource
+class StudentTenantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,7 +24,7 @@ class StudentTenantRessource extends JsonResource
             'email_verified_at' => $this->email_verified_at ?? null,
             'email' => $this->email,
             'profile_picture'=> 'https://api.dicebear.com/7.x/adventurer/svg?seed=Simon',
-            'role' => new RoleTenantRessource($this->roles->first()),
+            'role' => new RoleTenantResource($this->roles->first()),
             'addresses' => new AddressCollection($this->addresses),
             'avatar'=>'-',
             'number_phones' => new NumberPhoneCollection($this->numberPhone),

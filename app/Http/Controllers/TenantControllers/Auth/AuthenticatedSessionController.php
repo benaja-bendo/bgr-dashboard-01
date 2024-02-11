@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\TenantControllers\Auth;
 
-use App\Http\Resources\UserTenantRessource;
+use App\Http\Resources\UserTenantResource;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends ApiController
             return $this->successResponse(
                 [
                     'token' => $token,
-                    'user' => new UserTenantRessource($user),
+                    'user' => new UserTenantResource($user),
                     'tenant_id' => Crypt::encryptString($tenant->id),
                 ], 'User logged in successfully.');
         }

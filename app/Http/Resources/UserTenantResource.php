@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserTenantRessource extends JsonResource
+class UserTenantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,7 +25,7 @@ class UserTenantRessource extends JsonResource
             'email' => $this->email,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'role' => new RoleTenantRessource($this->roles->first()),
+            'role' => new RoleTenantResource($this->roles->first()),
         ];
     }
 }
