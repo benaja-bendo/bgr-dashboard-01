@@ -25,7 +25,7 @@ Route::prefix('v1')->group(function () {
                 $response = [
                     'success' => true,
                     'message' => "Users retrieved successfully.",
-                    'data' => $users,
+                    'data' => new \App\Http\Resources\UserTenantCollection($users),
                 ];
 
                 return response()->json($response, 200);
