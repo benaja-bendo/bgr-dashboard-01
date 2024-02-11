@@ -16,11 +16,11 @@ class TenantSeeder extends Seeder
     public function run(): void
     {
         // Creation du tenant
-        $tenant = \App\Models\Tenant::create(['id' => 'School1']);
+        $tenant = \App\Models\Tenant::create(['id' => 'EPSI']);
 
         // Creation de l'ecole
         $tenant->school()->create([
-            'name' => 'School1',
+            'name' => 'EPSI',
         ]);
 
         // Creation des roles, permissions et utilisateurs de base

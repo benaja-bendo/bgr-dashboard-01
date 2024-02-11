@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enums\RolesEnum;
+use App\Models\Address;
+use App\Models\NumberPhone;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +21,14 @@ class UserSeeder extends Seeder
             'email' => 'root@gmail.com',
         ]);
         $root->assignRole(RolesEnum::root->value);
-//         root->address()->create();
-//         $root->phoneNumber()->create();
+
+        NumberPhone::factory()->create([
+            'user_id' => $root->id,
+        ]);
+
+        Address::factory()->create([
+            'user_id' => $root->id,
+        ]);
+
     }
 }

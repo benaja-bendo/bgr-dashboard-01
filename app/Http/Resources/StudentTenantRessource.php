@@ -16,30 +16,20 @@ class StudentTenantRessource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'last_name' => $this->user->last_name,
-            'first_name' => $this->user->first_name,
-            'middle_names' => $this->user->middle_names,
-            'gender' => $this->user->gender,
-            'birth_date' => $this->user->birth_date,
-            'email_verified_at' => $this->user->email_verified_at ?? null,
-            'email' => $this->user->email,
+            'last_name' => $this->last_name,
+            'first_name' => $this->first_name,
+            'middle_names' => $this->middle_names,
+            'gender' => $this->gender,
+            'birth_date' => $this->birth_date,
+            'email_verified_at' => $this->email_verified_at ?? null,
+            'email' => $this->email,
             'profile_picture'=> 'https://api.dicebear.com/7.x/adventurer/svg?seed=Simon',
-            'created_at' => $this->user->created_at,
-            'updated_at' => $this->user->updated_at,
-            'role' => new RoleTenantRessource($this->user->roles->first()),
-//            'address' => new AddressTenantRessource($this->user->address),
+            'role' => new RoleTenantRessource($this->roles->first()),
+            'addresses' => new AddressCollection($this->addresses),
             'avatar'=>'-',
-            'address' => [
-                'street' => '-',
-                'postal_code' => '-',
-                'city' => '-',
-                'country' => '-',
-                'state'=> '-',
-            ],
-            'phone' => [
-                'number' => '-',
-                'type' => '-',
-            ],
+            'number_phones' => new NumberPhoneCollection($this->numberPhone),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

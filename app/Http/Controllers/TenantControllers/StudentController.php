@@ -4,8 +4,8 @@ namespace App\Http\Controllers\TenantControllers;
 
 use App\Enums\RolesEnum;
 use App\Http\Controllers\ApiController;
+use App\Http\Resources\StudentTenantCollection;
 use App\Http\Resources\StudentTenantRessource;
-use App\Http\Resources\UserTenantRessource;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -23,10 +23,11 @@ class StudentController extends ApiController
      */
     public function index(Request $request): JsonResponse
     {
-        $students = Student::all();
+//        $students = User::all();
+        $students = User::role(RolesEnum::student->value)->get();
         return $this->successResponse(
             data: StudentTenantRessource::collection($students),
-//            data: new UserTenantRessourceCollection($students),
+//            data: new StudentTenantCollection($students),
             message: "Students retrieved successfully.");
     }
 

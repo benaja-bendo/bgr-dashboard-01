@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\RolesEnum;
+use App\Models\Address;
+use App\Models\NumberPhone;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,10 +18,17 @@ class UserTenantSeeder extends Seeder
     {
         foreach (RolesEnum::cases() as $role) {
             if ($role->has(RolesEnum::student->value)) {
-                $user = User::factory(100)->create()
-                    ->each(function ($user) {
+                User::factory(100)->create()
+                    ->each(function (User $user){
                         $user->assignRole(RolesEnum::student->value);
                         $user->student()->create();
+                        NumberPhone::factory(rand(0, 3))->create([
+                            'user_id' => $user->id,
+                        ]);
+
+                        Address::factory(rand(0, 3))->create([
+                            'user_id' => $user->id,
+                        ]);
                     });
 
                 return;
@@ -29,6 +38,13 @@ class UserTenantSeeder extends Seeder
                 'email' => strtolower($role->label()) . '@example.com',
             ]);
             $user->assignRole($role->value);
+            NumberPhone::factory(rand(0, 3))->create([
+                'user_id' => $user->id,
+            ]);
+
+            Address::factory(rand(0, 3))->create([
+                'user_id' => $user->id,
+            ]);
         }
     }
 }
