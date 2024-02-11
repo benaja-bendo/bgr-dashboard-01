@@ -21,6 +21,8 @@ class UserTenantResource extends JsonResource
             'middle_names' => $this->middle_names,
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
+            'addresses' => new AddressCollection($this->addresses),
+            'number_phones' => new NumberPhoneCollection($this->numberPhone),
             'email_verified_at' => $this->email_verified_at ?? null,
             'email' => $this->email,
             'created_at' => $this->created_at,
