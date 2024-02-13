@@ -4,6 +4,7 @@ namespace App\Http\Controllers\TenantControllers;
 
 use App\Enums\RolesEnum;
 use App\Http\Controllers\ApiController;
+use App\Http\Resources\StudentTenantCollection;
 use App\Http\Resources\StudentTenantResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -21,12 +22,9 @@ class StudentController extends ApiController
      */
     public function index(Request $request): JsonResponse
     {
-//        $students = User::all();
-//        $students = User::role(RolesEnum::student->value)->get();
-        $students = User::role(RolesEnum::student->value)->get();
+        $students = User::role(RolesEnum::student->value)->orderBy('created_at', 'desc')->get();
         return $this->successResponse(
-            data: StudentTenantResource::collection($students),
-//            data: new StudentTenantCollection($students),
+            data: new StudentTenantCollection($students),
             message: "Students retrieved successfully.");
     }
 
@@ -57,7 +55,6 @@ class StudentController extends ApiController
             'password' => $password,
         ]);
         $userStudent->assignRole(RolesEnum::student->value);
-        $userStudent->student()->create();
         return $this->successResponse(
             data: null,
             message: "Student created successfully.",
@@ -73,7 +70,9 @@ class StudentController extends ApiController
     public function show(int $id): JsonResponse
     {
         $student = User::find($id);
-        return $this->successResponse(data: $student, message: "Student retrieved successfully.");
+        return $this->successResponse(
+            data: new StudentTenantResource($student),
+            message: "Student retrieved successfully.");
     }
 
     /**
@@ -93,7 +92,9 @@ class StudentController extends ApiController
 
         $student = User::find($id);
         $student->update($validated);
-        return $this->successResponse(data: $student, message: "Student updated successfully.");
+        return $this->successResponse(
+            data: new StudentTenantResource($student),
+            message: "Student updated successfully.");
     }
 
     /**
