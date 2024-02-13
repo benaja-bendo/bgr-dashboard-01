@@ -16,7 +16,7 @@ class StudentTenantResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'matriculate' => $this->studentInfos->matriculate,
+            'matriculate' => $this->studentInfos->matriculate ?? null,
             'full_name' => $this->first_name . ' ' . $this->last_name, // TODO: Change this to 'full_name' => $this->full_name, when full_name is implemented
             'last_name' => $this->last_name,
             'first_name' => $this->first_name,
