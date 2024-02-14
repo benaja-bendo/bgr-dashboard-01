@@ -33,11 +33,9 @@ Route::prefix('v1')->group(function () {
         );
 
         Route::post('/students/deletes', [StudentController::class, 'destroys']);
-//        Route::post('/students/import', [StudentController::class, 'import']);
-//        Route::post('/student/import/validate', [StudentController::class, 'validateImport']);
+        Route::post('/students/import', [StudentController::class, 'import']);
+        Route::get('/students/export-template', [StudentController::class, 'exportTemplate']);
         Route::get('/students/export', [StudentController::class, 'export']);
-//        Route::get('/students/export/filtered', [StudentController::class, 'exportFiltered']);
-//        Route::get('/students/export/template', [StudentController::class, 'exportTemplate']);
 
         Route::apiResource('/students', StudentController::class);
 

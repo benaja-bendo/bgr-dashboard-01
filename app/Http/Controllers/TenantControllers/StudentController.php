@@ -4,14 +4,16 @@ namespace App\Http\Controllers\TenantControllers;
 
 use App\Enums\RolesEnum;
 use App\Exports\StudentsExport;
+use App\Exports\StudentsTemplateExport;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\StudentTenantCollection;
 use App\Http\Resources\StudentTenantResource;
+use App\Imports\StudentImport;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -142,30 +144,25 @@ class StudentController extends ApiController
         return substr(bin2hex(random_bytes($length)), 0, $length);
     }
 
-    public function import(Request $request)
+    /**
+     * Import students from excel by using Maatwebsite\Excel\Excel
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function import(Request $request): JsonResponse
     {
-//        $request->validate([
-//            'file' => 'required|mimes:xlsx',
-//        ]);
-//
-//        Excel::import(new StudentsImport, $request->file('file'));
-//
-//        return $this->successResponse(data: null, message: "Students imported successfully.");
-    }
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
 
-    public function validateImport(Request $request)
-    {
-//        $request->validate([
-//            'file' => 'required|mimes:xlsx',
-//        ]);
-//
-//        $errors = (new StudentsImport)->validate($request->file('file'));
-//
-//        if (empty($errors)) {
-//            return $this->successResponse(data: null, message: "File is valid.");
-//        } else {
-//            return $this->errorResponse(error: $errors, code: 422);
-//        }
+        try {
+            $studentsImport = (new StudentImport())->toCollection($request->file('file'));
+            return $this->successResponse(
+                data: ['students' => $studentsImport],
+                message: "Students imported successfully.");
+        } catch (ValidationException $e) {
+            return $this->errorResponse(error: $e->getMessage(), errorMessages: $e->errors(), code: 422);
+        }
     }
 
     /**
@@ -177,27 +174,12 @@ class StudentController extends ApiController
         return Excel::download(new StudentsExport, 'students.xlsx');
     }
 
-    public function exportFiltered(Request $request)
+    /**
+     * Export students template to excel by using Maatwebsite\Excel\Excel
+     * @return BinaryFileResponse
+     */
+    public function exportTemplate(): BinaryFileResponse
     {
-//        $filters = $request->all();
-//
-//        return Excel::download(new StudentsFilteredExport($filters), 'students_filtered.xlsx');
-    }
-
-    public function exportTemplate()
-    {
-//        return Excel::download(new StudentsTemplateExport, 'students_template.xlsx');
-    }
-
-    public function saveExport(Request $request): JsonResponse
-    {
-        $fileName = 'students.xlsx';
-        Excel::store(new StudentsExport, $fileName, 'public');
-
-        $url = Storage::url($fileName);
-
-        return $this->successResponse(
-            data: ['file_url' => $url],
-            message: "Students exported successfully.");
+        return Excel::download(new StudentsTemplateExport, 'students_template.xlsx');
     }
 }
