@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TenantControllers;
 
 use App\Enums\RolesEnum;
+use App\Exports\StudentsExport;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\StudentTenantCollection;
 use App\Http\Resources\StudentTenantResource;
@@ -10,7 +11,9 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class StudentController extends ApiController
 {
@@ -137,5 +140,64 @@ class StudentController extends ApiController
     private function generateSecurePassword(int $length = 16): string
     {
         return substr(bin2hex(random_bytes($length)), 0, $length);
+    }
+
+    public function import(Request $request)
+    {
+//        $request->validate([
+//            'file' => 'required|mimes:xlsx',
+//        ]);
+//
+//        Excel::import(new StudentsImport, $request->file('file'));
+//
+//        return $this->successResponse(data: null, message: "Students imported successfully.");
+    }
+
+    public function validateImport(Request $request)
+    {
+//        $request->validate([
+//            'file' => 'required|mimes:xlsx',
+//        ]);
+//
+//        $errors = (new StudentsImport)->validate($request->file('file'));
+//
+//        if (empty($errors)) {
+//            return $this->successResponse(data: null, message: "File is valid.");
+//        } else {
+//            return $this->errorResponse(error: $errors, code: 422);
+//        }
+    }
+
+    /**
+     * Export students to excel by using Maatwebsite\Excel\Excel
+     * @return BinaryFileResponse
+     */
+    public function export(): BinaryFileResponse
+    {
+        return Excel::download(new StudentsExport, 'students.xlsx');
+    }
+
+    public function exportFiltered(Request $request)
+    {
+//        $filters = $request->all();
+//
+//        return Excel::download(new StudentsFilteredExport($filters), 'students_filtered.xlsx');
+    }
+
+    public function exportTemplate()
+    {
+//        return Excel::download(new StudentsTemplateExport, 'students_template.xlsx');
+    }
+
+    public function saveExport(Request $request): JsonResponse
+    {
+        $fileName = 'students.xlsx';
+        Excel::store(new StudentsExport, $fileName, 'public');
+
+        $url = Storage::url($fileName);
+
+        return $this->successResponse(
+            data: ['file_url' => $url],
+            message: "Students exported successfully.");
     }
 }
