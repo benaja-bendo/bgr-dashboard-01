@@ -111,7 +111,7 @@ class StudentController extends ApiController
      */
     public function destroy(Request $request, int $id): JsonResponse
     {
-        User::findOrFail($id)->delete();
+        User::findOrFail($id)->forceDelete();
         return $this->successResponse(data: null, message: "Student deleted successfully.");
     }
 
@@ -128,7 +128,7 @@ class StudentController extends ApiController
         ]);
         $ids_students = $request->ids;
         if (!empty($ids_students)) {
-            User::whereIn('id', $ids_students)->delete();
+            User::whereIn('id', $ids_students)->forceDelete();
             return $this->successResponse(data: null, message: "Students deleted successfully.");
         }
         return $this->errorResponse(error: "No students selected", code: 404);

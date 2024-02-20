@@ -18,11 +18,11 @@ class UserTenantSeeder extends Seeder
         foreach (RolesEnum::cases() as $role) {
             // Creation des etudiants
             if ($role->has(RolesEnum::student->value)) {
-                User::factory(100)->create()
+                User::factory(20)->create()
                     ->each(function (User $user){
                         $user->assignRole(RolesEnum::student->value);
                         $user->studentInfos()->create([
-                            'matriculate' => 'EPSI' . rand(1000, 9999),
+                            'matriculate' => 'EPSI' . fake()->unique()->numberBetween(1000, 9999),
                         ]);
                         NumberPhone::factory(rand(0, 3))->create([
                             'user_id' => $user->id,
