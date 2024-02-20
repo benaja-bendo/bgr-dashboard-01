@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'middle_names' => fake()->name(),
             'birth_date' => now()->subYears(rand(18, 30)), // fake()->date(),
-//            'birth_date' => fake()->date(),
+            'avatar' => 'https://api.dicebear.com/7.x/adventurer/svg?seed=' . fake()->name(),
             'gender' => fake()->randomElement(['male', 'female', 'other']),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

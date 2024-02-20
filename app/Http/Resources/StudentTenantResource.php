@@ -28,7 +28,7 @@ class StudentTenantResource extends JsonResource
             'profile_picture'=> 'https://api.dicebear.com/7.x/adventurer/svg?seed=Simon',
             'role' => new RoleTenantResource($this->roles->first()),
             'addresses' => new AddressCollection($this->addresses),
-            'avatar'=>'-',
+            'avatar'=> url($this->avatar),
             'number_phones' => new NumberPhoneCollection($this->numberPhone),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -20,6 +20,7 @@ class UserTenantResource extends JsonResource
             'first_name' => $this->first_name,
             'middle_names' => $this->middle_names,
             'gender' => $this->gender,
+            'avatar' => url($this->avatar),
             'birth_date' => $this->birth_date,
             'addresses' => new AddressCollection($this->addresses),
             'number_phones' => new NumberPhoneCollection($this->numberPhone),

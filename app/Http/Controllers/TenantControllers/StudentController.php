@@ -182,4 +182,27 @@ class StudentController extends ApiController
     {
         return Excel::download(new StudentsTemplateExport, 'students_template.xlsx');
     }
+
+    /**
+     * Upload image for student
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function uploadImage(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $student = User::find($id);
+        if (!$student) {
+            return $this->errorResponse(error: "Student not found", code: 404);
+        }
+        $student->avatar = saveFileToStorageDirectory($request, 'avatar', 'images');
+        $student->save();
+
+        return $this->successResponse(
+            data: new StudentTenantResource($student),
+            message: "Image uploaded successfully.");
+    }
 }
