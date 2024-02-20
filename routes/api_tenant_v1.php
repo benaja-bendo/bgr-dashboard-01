@@ -36,6 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/students/import', [StudentController::class, 'import']);
         Route::get('/students/export-template', [StudentController::class, 'exportTemplate']);
         Route::get('/students/export', [StudentController::class, 'export']);
+        Route::post('/students/{id}/upload-image', [StudentController::class, 'uploadImage']);
 
         Route::apiResource('/students', StudentController::class);
 
