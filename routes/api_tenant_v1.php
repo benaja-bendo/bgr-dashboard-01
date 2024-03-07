@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function () {
             }
         );
 
+//        Route::get('/students/search', [StudentController::class, 'search']);
         Route::post('/students/deletes', [StudentController::class, 'destroys']);
         Route::post('/students/import', [StudentController::class, 'import']);
         Route::get('/students/export-template', [StudentController::class, 'exportTemplate']);
