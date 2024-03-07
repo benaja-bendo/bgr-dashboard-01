@@ -27,7 +27,16 @@ class StudentController extends ApiController
      */
     public function index(Request $request): JsonResponse
     {
-        $students = User::role(RolesEnum::student->value)->orderBy('created_at', 'desc')->get();
+        $students = User::query()
+        ->whereHas('roles', function ($query) {
+            $query->where('name', 'student');
+        })->when($request->search, function ($query, $search) {
+            return $query->where(function ($query) use ($search) {
+                $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        })->orderBy('created_at', 'desc')->get();
         return $this->successResponse(
             data: new StudentTenantCollection($students),
             message: "Students retrieved successfully.");
@@ -75,6 +84,9 @@ class StudentController extends ApiController
     public function show(int $id): JsonResponse
     {
         $student = User::find($id);
+        if (!$student) {
+            return $this->errorResponse(error: "Student not found", code: 404);
+        }
         return $this->successResponse(
             data: new StudentTenantResource($student),
             message: "Student retrieved successfully.");
@@ -204,5 +216,26 @@ class StudentController extends ApiController
         return $this->successResponse(
             data: new StudentTenantResource($student),
             message: "Image uploaded successfully.");
+    }
+
+    /**
+     * Search students
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $request->validate([
+            'search' => 'required',
+        ]);
+        $search = $request->search;
+        $students = User::role(RolesEnum::student->value)
+            ->where('first_name', 'like', '%' . $search . '%')
+            ->orWhere('last_name', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%')
+            ->get();
+        return $this->successResponse(
+            data: new StudentTenantCollection($students),
+            message: "Students retrieved successfully.");
     }
 }
