@@ -60,6 +60,7 @@ class StudentController extends ApiController
         ]);
 
         $password = Hash::make($this->generateSecurePassword());
+        $fullName = $validated['first_name'] . ' ' . $validated['last_name'];
         $userStudent = User::create([
             'last_name' => $validated['last_name'],
             'first_name' => $validated['first_name'],
@@ -67,6 +68,7 @@ class StudentController extends ApiController
             'birth_date' => $validated['birth_date'],
             'email' => $validated['email'],
             'password' => $password,
+            'avatar' => 'https://api.dicebear.com/7.x/adventurer/svg?seed=' . $fullName,
         ]);
         $userStudent->assignRole(RolesEnum::student->value);
         return $this->successResponse(
