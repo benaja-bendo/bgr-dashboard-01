@@ -62,7 +62,7 @@ class StudentController extends ApiController
 
         $password = Hash::make($this->generateSecurePassword());
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = saveFileToStorageDirectory($request, 'avatar', 'images');
+            $validated['avatar'] = tenantSaveFileToStorageDirectory($request, 'avatar', 'avatars_student');
         } else {
             $fullName = $validated['first_name'] . ' ' . $validated['last_name'];
             $validated['avatar'] = 'https://api.dicebear.com/7.x/adventurer/svg?seed=' . $fullName;

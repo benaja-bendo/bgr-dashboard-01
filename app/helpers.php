@@ -17,6 +17,19 @@ function saveFileToStorageDirectory(Request $request, string $key_name, string $
 }
 
 /**
+ * @param Request $request
+ * @param string $key_name
+ * @param string $name_directory_storage
+ * @return string
+ */
+function tenantSaveFileToStorageDirectory(Request $request, string $key_name, string $name_directory_storage = ""): string
+{
+    $imageName = time() . '_' . trim(str_replace(" ", "_", $request->file($key_name)->getClientOriginalName()));
+    $tenant = 'tenants' . DIRECTORY_SEPARATOR . tenant()->tenancy_db_name;
+    return DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . $tenant . DIRECTORY_SEPARATOR . $request->file($key_name)->storeAs($name_directory_storage, $imageName, 'tenant');
+}
+
+/**
  * Get the file url
  *
  * @param string $path
