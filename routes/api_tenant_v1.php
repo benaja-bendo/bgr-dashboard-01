@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TenantControllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TenantControllers\StudentController;
-
+use Illuminate\Support\Facades\Storage;
 
 
 Route::prefix('v1')->group(function () {
@@ -18,17 +18,21 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['tenancy.setup'])->group(function () {
 
-        Route::get(
+        Route::post(
             '/test',
             function (Request $request) {
-                $users = User::all();
+                /*$users = User::all();
                 $response = [
                     'success' => true,
                     'message' => "Users retrieved successfully.",
                     'data' => new \App\Http\Resources\UserTenantCollection($users),
                 ];
 
-                return response()->json($response, 200);
+                return response()->json($response, 200);*/
+                $path = $request->file('avatar')->store(
+                    'avatars', 'tenant'
+                );
+                return response()->json(['url' => Storage::disk('tenant')->url($path)], 200);
             }
         );
 
