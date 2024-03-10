@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+    mysql:
+        container_name: mysql
+        image: "mysql:8.0"
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_DATABASE: '${DB_DATABASE}'
+        volumes:
+            - ".docker/db/data:/var/lib/mysql"
+            - ".docker/logs:/var/log/mysql"
+            - ".docker/db/my.cnf:/etc/mysql/conf.d/my.cnf"
+            - ".docker/db/sql:/docker-entrypoint-initdb.d"
+        ports:
+            - "3306:3306"
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: "phpmyadmin:latest"
+        restart: always
+        environment:
+            PMA_HOST: "mysql"
+            PMA_PORT: "3306"
+        ports:
+            - "8080:80"
