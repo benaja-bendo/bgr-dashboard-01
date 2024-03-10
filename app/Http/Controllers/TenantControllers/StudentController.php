@@ -28,15 +28,15 @@ class StudentController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $students = User::query()
-        ->whereHas('roles', function ($query) {
-            $query->where('name', 'student');
-        })->when($request->search, function ($query, $search) {
-            return $query->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', '%' . $search . '%')
-                    ->orWhere('last_name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
-            });
-        })->orderBy('created_at', 'desc')->get();
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'student');
+            })->when($request->search, function ($query, $search) {
+                return $query->where(function ($query) use ($search) {
+                    $query->where('first_name', 'like', '%' . $search . '%')
+                        ->orWhere('last_name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%');
+                });
+            })->orderBy('created_at', 'desc')->get();
         return $this->successResponse(
             data: new StudentTenantCollection($students),
             message: "Students retrieved successfully.");
@@ -56,19 +56,25 @@ class StudentController extends ApiController
             'first_name' => 'required',
             'gender' => 'required|in:male,female,other',
             'birth_date' => 'nullable',
-            'email' => 'required',
+            'email' => 'required|email|unique:users',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $password = Hash::make($this->generateSecurePassword());
-        $fullName = $validated['first_name'] . ' ' . $validated['last_name'];
+        if ($request->hasFile('avatar')) {
+            $validated['avatar'] = saveFileToStorageDirectory($request, 'avatar', 'images');
+        } else {
+            $fullName = $validated['first_name'] . ' ' . $validated['last_name'];
+            $validated['avatar'] = 'https://api.dicebear.com/7.x/adventurer/svg?seed=' . $fullName;
+        }
         $userStudent = User::create([
             'last_name' => $validated['last_name'],
             'first_name' => $validated['first_name'],
             'gender' => $validated['gender'],
-            'birth_date' => $validated['birth_date'],
+            'birth_date' => $validated['birth_date'] ?? null,
             'email' => $validated['email'],
             'password' => $password,
-            'avatar' => 'https://api.dicebear.com/7.x/adventurer/svg?seed=' . $fullName,
+            'avatar' => $validated['avatar'],
         ]);
         $userStudent->assignRole(RolesEnum::student->value);
         return $this->successResponse(
