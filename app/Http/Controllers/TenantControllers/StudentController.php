@@ -58,6 +58,7 @@ class StudentController extends ApiController
             'birth_date' => 'nullable',
             'email' => 'required|email|unique:users',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'phone_number' => 'nullable|numeric',
         ]);
 
         $password = Hash::make($this->generateSecurePassword());
@@ -77,6 +78,9 @@ class StudentController extends ApiController
             'avatar' => $validated['avatar'],
         ]);
         $userStudent->assignRole(RolesEnum::student->value);
+        $userStudent->numberPhone()->create([
+            'phone_number' => $validated['phone_number'] ?? null,
+        ]);
         return $this->successResponse(
             data: null,
             message: "Student created successfully.",
@@ -111,12 +115,26 @@ class StudentController extends ApiController
     {
 
         $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required',
+            'last_name' => 'nullable',
+            'first_name' => 'nullable',
+            'gender' => 'nullable|in:male,female,other',
+            'birth_date' => 'nullable',
+            'email' => 'nullable|email',
+            'phone_number' => 'nullable|numeric',
         ]);
+        // check if email is unique and not the same as the current email
+        if (isset($validated['email'])) {
+            $email = User::where('email', $validated['email'])->where('id', '!=', $id)->first();
+            if ($email) {
+                return $this->errorResponse(error: "Email already exists", code: 422);
+            }
+        }
 
         $student = User::find($id);
         $student->update($validated);
+        $student->numberPhone()->create([
+            'phone_number' => $validated['phone_number'] ?? null,
+        ]);
         return $this->successResponse(
             data: new StudentTenantResource($student),
             message: "Student updated successfully.");
@@ -218,7 +236,7 @@ class StudentController extends ApiController
         if (!$student) {
             return $this->errorResponse(error: "Student not found", code: 404);
         }
-        $student->avatar = saveFileToStorageDirectory($request, 'avatar', 'images');
+        $student->avatar = tenantSaveFileToStorageDirectory($request, 'avatar', 'avatars_student');
         $student->save();
 
         return $this->successResponse(

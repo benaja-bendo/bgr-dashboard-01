@@ -18,7 +18,7 @@ class NumberPhoneFactory extends Factory
     {
         return [
             'user_id' => \App\Models\User::factory(),
-            'number_phone' => fake()->phoneNumber,
+            'phone_number' => fake()->phoneNumber,
             'type' => fake()->randomElement(['home', 'work', 'mobile']),
             'is_default' => fake()->boolean,
             'country_code' => fake()->countryCode,

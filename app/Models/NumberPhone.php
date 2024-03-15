@@ -13,7 +13,7 @@ class NumberPhone extends Model
 
     protected $fillable = [
         'user_id',
-        'number_phone',
+        'phone_number',
         'type',
         'is_default',
         'country_code',

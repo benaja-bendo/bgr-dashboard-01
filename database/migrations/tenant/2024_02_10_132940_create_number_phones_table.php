@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('number_phone')->nullable(); // Champ pour le numéro de téléphone
+            $table->string('phone_number')->nullable(); // Champ pour le numéro de téléphone
             $table->enum('type', ['home', 'mobile', 'work', 'other'])->nullable(); // Champ pour le type de number de téléphone
             $table->boolean('is_default')->default(false); // Champ pour savoir si c'est le number par defaults
             $table->string('country_code', 5)->nullable(); // Champ pour le code du pays du number de téléphone
