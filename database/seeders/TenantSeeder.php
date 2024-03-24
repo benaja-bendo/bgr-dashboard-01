@@ -30,6 +30,7 @@ class TenantSeeder extends Seeder
                 PermissionTenantSeeder::class,
                 RoleHasPermissionTenantSeeder::class,
                 UserTenantSeeder::class,
+                CalendarEventSeeder::class,
             ]);
         });
     }

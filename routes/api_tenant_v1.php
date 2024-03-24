@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\TenantControllers\CalendarEventController;
 use App\Http\Controllers\TenantControllers\SchoolController;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TenantControllers\Auth\AuthenticatedSessionController;
@@ -21,14 +21,16 @@ Route::prefix('v1')->group(function () {
         Route::post(
             '/test',
             function (Request $request) {
-                /*$users = User::all();
+                /*
+                 $users = User::all();
                 $response = [
                     'success' => true,
                     'message' => "Users retrieved successfully.",
                     'data' => new \App\Http\Resources\UserTenantCollection($users),
                 ];
 
-                return response()->json($response, 200);*/
+                return response()->json($response, 200);
+                */
                 $path = $request->file('avatar')->store(
                     'avatars', 'tenant'
                 );
@@ -36,7 +38,6 @@ Route::prefix('v1')->group(function () {
             }
         );
 
-//        Route::get('/students/search', [StudentController::class, 'search']);
         Route::post('/students/deletes', [StudentController::class, 'destroys']);
         Route::post('/students/import', [StudentController::class, 'import']);
         Route::get('/students/export-template', [StudentController::class, 'exportTemplate']);
@@ -45,9 +46,11 @@ Route::prefix('v1')->group(function () {
 
         Route::apiResource('/students', StudentController::class);
 
+        // Calendar Events
+        Route::apiResource('/calendar-events', CalendarEventController::class);
+
     });
 
 
-
-    Route::get('/schools', [SchoolController::class,'index']);
+    Route::get('/schools', [SchoolController::class, 'index']);
 });
