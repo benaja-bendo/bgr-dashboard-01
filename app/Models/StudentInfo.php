@@ -4,19 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PhoneNumber extends Model
+class StudentInfo extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'number',
-        'type',
-        'country_code',
-        'area_code',
+        'user_id',
+        'matriculate',
     ];
 
-    public function user(): BelongsTo
+    public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
     }

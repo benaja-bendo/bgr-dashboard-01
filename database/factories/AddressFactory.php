@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Address>
  */
-class AddresseFactory extends Factory
+class AddressFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,12 +17,14 @@ class AddresseFactory extends Factory
     public function definition(): array
     {
         return [
-            'street' => $this->faker->streetAddress,
+            'user_id' => \App\Models\User::factory(),
+            'street' => $this->faker->streetName,
             'number' => $this->faker->buildingNumber,
-            'complement' => $this->faker->sentence,
+            'complement' => $this->faker->sentence(3),
             'city' => $this->faker->city,
-            'zipcode' => $this->faker->postcode,
+            'zip_code' => fake()->postcode,
             'country' => $this->faker->country,
+            'is_default' => $this->faker->boolean,
         ];
     }
 }

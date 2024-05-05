@@ -12,9 +12,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class UserTenant extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable,HasRoles,SoftDeletes;
+
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -65,6 +67,11 @@ class User extends Authenticatable
     public function studentInfos(): HasOne
     {
         return $this->hasOne(StudentInfo::class);
+    }
+
+    public function calendarEvents(): HasMany
+    {
+        return $this->hasMany(CalendarEvent::class, 'user_id');
     }
 
 }
