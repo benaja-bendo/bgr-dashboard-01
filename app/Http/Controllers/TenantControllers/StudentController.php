@@ -16,15 +16,38 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use OpenApi\Attributes as OA;
 
 class StudentController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
+    #[OA\Get(
+        path: "/api/v1/students",
+        operationId: "indexStudents",
+        description: "Get all students",
+        summary: "List all students",
+        tags: ["Students"],
+        parameters: [
+            new OA\Parameter(
+                name: "search",
+                description: "Search students by first name, last name or email",
+                in: "query",
+                required: false,
+                allowEmptyValue: false,
+                schema: new OA\Schema(type: "string"),
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'successful operation',
+                content: [
+                    new OA\JsonContent(ref: "#/components/schemas/User"),
+                    new OA\XmlContent(ref: "#/components/schemas/User")
+                ]
+            ),
+            new OA\Response(response: 401, description: 'Not allowed'),
+        ]
+    )]
     public function index(Request $request): JsonResponse
     {
         $students = User::query()
@@ -42,13 +65,43 @@ class StudentController extends ApiController
             message: "Students retrieved successfully.");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws \Exception
-     */
+    #[OA\Post(
+        path: "/api/v1/students",
+        operationId: "storeStudent",
+        description: "Create a new student",
+        summary: "Create student",
+        requestBody: new OA\RequestBody(
+            description: "Student data",
+            required: true,
+            content: [
+                new OA\MediaType(
+                    mediaType: "application/json",
+                    schema: new OA\Schema(
+                        title: "User",
+                        description: "User model",
+                        required: ["last_name", "first_name", "email", "password"],
+                        properties: [
+                            new OA\Property(property: "last_name", description: "Last name of the user", type: "string"),
+                            new OA\Property(property: "first_name", description: "First name of the user", type: "string"),
+                            new OA\Property(property:"email", description: "Email of the user", type: "string"),
+                            new OA\Property(property:"password", description: "Password of the user", type: "string"),
+                        ]
+                    )),
+            ]
+        ),
+        tags: ["Students"],
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: 'successful operation',
+                content: [
+                    new OA\JsonContent(ref: "#/components/schemas/User"),
+                    new OA\XmlContent(ref: "#/components/schemas/User")
+                ]
+            ),
+            new OA\Response(response: 422, description: 'Invalid input'),
+        ]
+    )]
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([

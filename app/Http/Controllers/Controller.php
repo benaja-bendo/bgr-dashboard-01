@@ -5,13 +5,40 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use OpenApi\Attributes as OA;
 
+#[OA\Info(
+    version: "0.1",
+    description: "Base app API",
+    title: "Bgrfacile API",
+    termsOfService: "http://bgrfacile.com/tos",
+    contact: new OA\Contact(email: "contact@example.com"),
+    license: new OA\License(name: "MIT", url: "http://bgrfacile.com"),
+)]
+#[OA\OpenApi(
+    security: [
+        new OA\SecurityScheme(
+            securityScheme: "bearerAuth",
+            type: "http",
+            bearerFormat: "JWT",
+            scheme: "bearer",
+        )
+    ],
+)]
+#[OA\SecurityScheme(
+    securityScheme: "bearerAuth",
+    type: "http",
+    description: "Authentification par jeton porteur JWT",
+    bearerFormat: "JWT",
+    scheme: "bearer",
+
+)]
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
     /**
      * Send a success response.
      *
