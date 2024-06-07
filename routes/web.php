@@ -16,7 +16,6 @@ Route::get('/documentation/json', function () {
     return response()
         ->json($openapi)
         ->header('Content-Type', 'application/json');
-//        ->header('Content-Type', 'application/yaml');
 })->name('documentation.json');
 
 Route::view('documentation', 'documentation')
@@ -34,4 +33,4 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth_web.php';
