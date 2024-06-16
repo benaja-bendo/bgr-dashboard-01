@@ -33,4 +33,4 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__ . '/auth_web.php';
+require __DIR__ . '/dashboard/auth_web.php';

@@ -6,4 +6,4 @@
 |--------------------------------------------------------------------------
 |
 */
-require __DIR__ . '/api_tenant_v1.php';
+require __DIR__ . '/tenants/api_tenant_v1.php';
