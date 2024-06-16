@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('last_name')->nullable(); // Champ pour le nom de famille
+            $table->string('first_name')->nullable(); // Champ pour le prénom principal
+            $table->string('middle_names')->nullable(); // Champ pour les prénoms additionnels
+            $table->text('avatar')->nullable(); // Champ pour l'avatar (photo de profil)
+            $table->enum('gender', ['male', 'female', 'other'])->nullable(); // Champ pour le genre
+            $table->date('birth_date')->nullable(); // Champ pour la date de naissance
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

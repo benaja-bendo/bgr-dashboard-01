@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TenantControllers\Auth;
 
+use App\Http\Resources\UserTenantResource;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -27,17 +28,21 @@ class AuthenticatedSessionController extends ApiController
         ]);
 
         $tenant = Tenant::find($request->school_name);
+        if (!$tenant) {
+            return $this->errorResponse('Invalid credentials', [], 401);
+        }
         tenancy()->initialize($tenant);
 
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('token-name')->plainTextToken;
+            $tokenName = 'token-' . $user->id . '-' . now()->timestamp;
+            $token = $user->createToken($tokenName)->plainTextToken;
             return $this->successResponse(
                 [
                     'token' => $token,
-                    'user' => $user,
+                    'user' => new UserTenantResource($user),
                     'tenant_id' => Crypt::encryptString($tenant->id),
                 ], 'User logged in successfully.');
         }
@@ -52,8 +57,9 @@ class AuthenticatedSessionController extends ApiController
      */
     public function destroy(Request $request): JsonResponse
     {
-        $user = $request->user(); // get the authenticated user
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete(); // delete the current token
+        // TODO: Implement destroy() method.
+//        $user = $request->user(); // get the authenticated user
+//        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete(); // delete the current token
 
         return $this->successResponse(null, 'User logged out successfully.');
     }
