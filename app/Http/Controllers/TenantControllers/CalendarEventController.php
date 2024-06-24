@@ -51,4 +51,13 @@ class CalendarEventController extends Controller
     {
         //
     }
+
+    /**
+     * Export the specified resource.
+     */
+    public function export(string $user_id)
+    {
+        // TODO: Implement export method
+        //dd('Exporting calendar events for user ' . $user_id);
+    }
 }

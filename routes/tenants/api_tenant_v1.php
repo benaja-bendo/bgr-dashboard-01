@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function () {
 
         // Calendar Events
         Route::apiResource('/calendar-events', CalendarEventController::class);
+        Route::get('/calendar-events/{user_id}/export', [CalendarEventController::class, 'export']);
 
     });
 
