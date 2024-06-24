@@ -14,6 +14,7 @@
         "livewire/livewire": "^3.5",
         "livewire/volt": "^1.6",
         "maatwebsite/excel": "^3.1",
+        "spatie/icalendar-generator": "^2.8",
         "spatie/laravel-permission": "^6.3",
         "stancl/tenancy": "^3.7",
         "tightenco/ziggy": "^1.0",
