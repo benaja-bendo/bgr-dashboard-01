@@ -10,11 +10,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 
 class UserTenant extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,HasRoles,SoftDeletes;
+    use HasApiTokens,
+        HasFactory,
+        Notifiable,
+        HasRoles,
+        SoftDeletes,
+        Searchable;
 
     protected $table = 'users';
 
@@ -69,9 +75,31 @@ class UserTenant extends Authenticatable
         return $this->hasOne(StudentInfo::class);
     }
 
+    /**
+     * Obtenez les événements du calendrier associés à l'UserTenant.
+     *
+     * @return HasMany
+     */
     public function calendarEvents(): HasMany
     {
         return $this->hasMany(CalendarEvent::class, 'user_id');
     }
 
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'last_name' => $this->last_name,
+            'first_name' => $this->first_name,
+            'middle_names' => $this->middle_names,
+            'email' => $this->email,
+            'birth_date' => $this->birth_date,
+            'gender' => $this->gender,
+        ];
+    }
+
+    public function searchableAs(): string
+    {
+        return 'tenant_' . tenant('id') . '_users';
+    }
 }

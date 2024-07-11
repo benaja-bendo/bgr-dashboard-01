@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TenantControllers\CalendarEventController;
 use App\Http\Controllers\TenantControllers\SchoolController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,8 @@ Route::prefix('v1')->group(function () {
 
         // Calendar Events
         Route::apiResource('/calendar-events', CalendarEventController::class);
+
+        Route::get('/search', [SearchController::class, 'search']);
 
     });
 
