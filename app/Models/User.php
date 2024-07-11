@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 use OpenApi\Attributes as OA;
 
@@ -50,7 +51,12 @@ use OpenApi\Attributes as OA;
 ]
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasApiTokens,
+        HasFactory,
+        Notifiable,
+        HasRoles,
+        SoftDeletes,
+        Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -103,4 +109,16 @@ class User extends Authenticatable
         return $this->hasOne(StudentInfo::class);
     }
 
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'last_name' => $this->last_name,
+            'first_name' => $this->first_name,
+            'middle_names' => $this->middle_names,
+            'email' => $this->email,
+            'birth_date' => $this->birth_date,
+            'gender' => $this->gender,
+        ];
+    }
 }

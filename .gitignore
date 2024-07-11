@@ -18,5 +18,4 @@ yarn-error.log
 /.idea
 /.vscode
 /data
-# docker-compose.yml
 .docker
