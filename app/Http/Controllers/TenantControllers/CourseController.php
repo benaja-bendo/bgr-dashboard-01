@@ -13,6 +13,7 @@ class CourseController extends ApiController
 {
     /**
      * Display a listing of the resource.
+     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -23,12 +24,13 @@ class CourseController extends ApiController
 
     /**
      * Store a newly created resource in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_premium' => 'boolean',
             'states_course_id' => 'required|exists:states_courses,id',
@@ -39,8 +41,10 @@ class CourseController extends ApiController
     }
     /**
      * Display the specified resource.
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         $course = Course::with('stateCourse')->find($id);
         if (!$course) {
@@ -52,8 +56,11 @@ class CourseController extends ApiController
 
     /**
      * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $course = Course::find($id);
         if (!$course) {
@@ -74,8 +81,10 @@ class CourseController extends ApiController
 
     /**
      * Remove the specified resource from storage.
+     * @param int $id
+     * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $course = Course::find($id);
         if (!$course) {

@@ -12,6 +12,7 @@ class StateCourseController extends ApiController
 {
     /**
      * Display a listing of the resource.
+     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -21,6 +22,8 @@ class StateCourseController extends ApiController
 
     /**
      * Store a newly created resource in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -34,6 +37,8 @@ class StateCourseController extends ApiController
 
     /**
      * Display the specified resource.
+     * @param StateCourse $stateCourse
+     * @return JsonResponse
      */
     public function show(StateCourse $stateCourse): JsonResponse
     {
@@ -42,6 +47,9 @@ class StateCourseController extends ApiController
 
     /**
      * Update the specified resource in storage.
+     * @param Request $request
+     * @param StateCourse $stateCourse
+     * @return JsonResponse
      */
     public function update(Request $request, StateCourse $stateCourse): JsonResponse
     {
@@ -56,6 +64,8 @@ class StateCourseController extends ApiController
 
     /**
      * Remove the specified resource from storage.
+     * @param StateCourse $stateCourse
+     * @return JsonResponse
      */
     public function destroy(StateCourse $stateCourse): JsonResponse
     {
