@@ -13,9 +13,9 @@ use OpenApi\Attributes as OA;
     version: "0.1",
     description: "Base app API",
     title: "Bgrfacile API",
-    termsOfService: "http://bgrfacile.com/tos",
-    contact: new OA\Contact(email: "contact@example.com"),
-    license: new OA\License(name: "MIT", url: "http://bgrfacile.com"),
+    termsOfService: "https://bgrfacile.com/tos",
+    contact: new OA\Contact(email: "contact@bgrfacile.com"),
+    license: new OA\License(name: "MIT", url: "https://bgrfacile.com"),
 )]
 #[OA\OpenApi(
     security: [

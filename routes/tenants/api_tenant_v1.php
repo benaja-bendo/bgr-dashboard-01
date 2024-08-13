@@ -23,7 +23,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('/calendar-events', CalendarEventController::class);
 
         //courses
-        Route::apiResource('state_courses', StateCourseController::class);
+        Route::apiResource('state-courses', StateCourseController::class);
         Route::apiResource('courses', CourseController::class);
     });
 
