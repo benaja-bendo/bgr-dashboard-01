@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TenantControllers;
 
+use Illuminate\Support\Str;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +37,8 @@ class CourseController extends ApiController
             'states_course_id' => 'required|exists:states_courses,id',
         ]);
 
+        $validated['slug'] = Str::slug($validated['name']);
+
         $course = Course::create($validated);
         return $this->successResponse(new CourseResource($course), 'Course created successfully.');
     }
@@ -48,7 +51,10 @@ class CourseController extends ApiController
     {
         $course = Course::with('stateCourse')->find($id);
         if (!$course) {
-            return $this->errorResponse('Course not found', [], 404);
+            return $this->errorResponse(
+                error: 'Course not found.',
+                code: 404
+            );
         }
 
         return $this->successResponse(new CourseResource($course), 'Course retrieved successfully.');
@@ -64,16 +70,20 @@ class CourseController extends ApiController
     {
         $course = Course::find($id);
         if (!$course) {
-            return $this->errorResponse('Course not found', [], 404);
+            return $this->errorResponse(
+                error: 'Course not found.',
+                code: 404
+            );
         }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_premium' => 'boolean',
             'states_course_id' => 'required|exists:states_courses,id',
         ]);
+
+        $validated['slug'] = Str::slug($validated['name']);
 
         $course->update($validated);
         return $this->successResponse(new CourseResource($course), 'Course updated successfully.');
@@ -88,8 +98,12 @@ class CourseController extends ApiController
     {
         $course = Course::find($id);
         if (!$course) {
-            return $this->errorResponse('Course not found', [], 404);
+            return $this->errorResponse(
+                error: 'Course not found.',
+                code: 404
+            );
         }
+
 
         $course->delete();
         return $this->successResponse(null, 'Course deleted successfully.');
