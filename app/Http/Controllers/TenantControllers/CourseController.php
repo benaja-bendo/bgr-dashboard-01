@@ -140,9 +140,7 @@ class CourseController extends Controller
     {
         $course = Course::with('stateCourse')->find($id);
         if (!$course) {
-            return $this->errorResponse(
-                error: 'Course not found.'
-            );
+            return $this->errorResponse('Course not found', [], 404);
         }
 
         return $this->successResponse(
@@ -186,9 +184,7 @@ class CourseController extends Controller
     {
         $course = Course::find($id);
         if (!$course) {
-            return $this->errorResponse(
-                error: 'Course not found.'
-            );
+            return $this->errorResponse('Course not found', [], 404);
         }
 
         $validated = $request->validate([
@@ -198,7 +194,6 @@ class CourseController extends Controller
             'states_course_id' => 'required|exists:states_courses,id',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
         $course->update($validated);
 
         return $this->successResponse(
@@ -237,9 +232,7 @@ class CourseController extends Controller
     {
         $course = Course::find($id);
         if (!$course) {
-            return $this->errorResponse(
-                error: 'Course not found.'
-            );
+            return $this->errorResponse('Course not found', [], 404);
         }
 
 
