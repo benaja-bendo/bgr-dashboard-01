@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\TenantControllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
 
-class SchoolController extends ApiController
+class SchoolController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $tenants = Tenant::all();
 
+        //TODO fix (le retour que les autres)
         $response = [
             'success' => true,
             'message' => "Schools retrieved successfully.",
@@ -23,7 +23,7 @@ class SchoolController extends ApiController
                 ];
             }),
         ];
-        return response()->json($response, 200);
+        return response()->json($response);
     }
 
 }

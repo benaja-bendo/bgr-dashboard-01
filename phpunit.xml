@@ -14,17 +14,21 @@
     </testsuites>
     <source>
         <include>
-            <directory>app</directory>
+            <directory>.</directory>
         </include>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:qnKMJwnc8BBZ8hcjJMXkduAmNFgTa5o/E27Z29mBlPk="/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <env name="DB_DATABASE" value="testing"/>
+        <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="TENANCY_DATABASE_AUTO_DELETE" value="1"/>
+        <env name="TENANCY_DATABASE_AUTO_DELETE_USER" value="1"/>
+        <env name="TENANCY_AUTO_HOSTNAME_IDENTIFICATION" value="0" />
     </php>
 </phpunit>

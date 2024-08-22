@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CentralControllers\dashbord\TenantController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard');
 
 Route::get('/documentation/json', function () {
-    $openapi = \OpenApi\Generator::scan(['../app']);
+    $openapi = \OpenApi\Generator::scan([app_path()]);
     return response()
         ->json($openapi)
         ->header('Content-Type', 'application/json');
@@ -33,11 +34,11 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::get('/dashboard/tenants', [App\Http\Controllers\dashbord\TenantController::class, 'index'])
+Route::get('/dashboard/tenants', [TenantController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('tenant.index');
 
-Route::get('/dashboard/settings', [App\Http\Controllers\dashbord\TenantController::class, 'settings'])
+Route::get('/dashboard/settings', [TenantController::class, 'settings'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard.settings');
 

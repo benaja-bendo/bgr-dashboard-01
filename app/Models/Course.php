@@ -18,6 +18,16 @@ class Course extends Model
         'states_courses_id',
     ];
 
+    public function isPremium(): bool
+    {
+        return $this->is_premium;
+    }
+
+    public function getFormattedName(): string
+    {
+        return strtoupper($this->name);
+    }
+
     public function stateCourse(): BelongsTo
     {
         return $this->belongsTo(StateCourse::class, 'states_courses_id');
