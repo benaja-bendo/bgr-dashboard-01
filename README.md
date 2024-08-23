@@ -1,141 +1,96 @@
-## About App
+# Bgrfacile Backend - Laravel Multi-Tenant API
 
-Backend and API.
+## Description
 
-## Configuration
+Ce projet constitue le backend de l’application Bgrfacile, un système multi-tenant développé avec le framework Laravel. Le backend fournit une API RESTful pour la gestion des cours et des étudiants, en utilisant une architecture multi-tenant pour isoler les données des différents clients. L’application est documentée avec OpenAPI grâce à zircote/swagger-php, et le déploiement continu est géré par GitHub Actions.
 
-### docker-compose.yml
-```yml
-version: '3'
+## Fonctionnalités
 
-services:
+- Gestion multi-tenant des données (cours, étudiants, etc.)
+- API RESTful avec documentation OpenAPI
+- Séparation des données entre différents tenants
+- Support CRUD complet pour les entités “Cours” et “Étudiants”
+- Authentification et autorisation basées sur JWT
+- Validation des requêtes via des tests unitaires et d’intégration avec Pest
 
-    ####################################################################################################
-    # PHP
-    ####################################################################################################
-    php:
-        build: .docker/php
-        ports:
-            - 5173:5173
-        volumes:
-            - .:/var/www:cached
+## Prérequis
 
-    ####################################################################################################
-    # Nginx
-    ####################################################################################################
-    nginx:
-        image: nginx
-        ports:
-            - 80:80
-        volumes:
-            - .:/var/www
-            - .docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-            - .docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-        depends_on:
-            - php
+- PHP >= 8.3.10
+- Composer
+- MySQL ou PostgreSQL
+- Redis (pour la gestion des files d’attente et le cache)
+- Node.js (pour le frontend s’il est couplé)
+- Laravel 11.x
 
-    ####################################################################################################
-    # DATABASE (MySQL)
-    ####################################################################################################
-    db:
-        image: mysql:8.1
-        ports:
-            - 3306:3306
-        volumes:
-            - .docker/db/data:/var/lib/mysql
-            - .docker/logs:/var/log/mysql
-            - .docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
-            - .docker/db/sql:/docker-entrypoint-initdb.d
-        environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: refactorian
-            MYSQL_USER: refactorian
-            MYSQL_PASSWORD: refactorian
+## Installation
 
-    # ####################################################################################################
-    # # DATABASE (MariaDB)
-    # ####################################################################################################
-    # db:
-    #     image: mariadb:10.11
-    #     ports:
-    #         - 3306:3306
-    #     volumes:
-    #         - .docker/db/data:/var/lib/mysql
-    #         - .docker/logs:/var/log/mysql
-    #         - .docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
-    #         - .docker/db/sql:/docker-entrypoint-initdb.d
-    #     environment:
-    #         MYSQL_ROOT_PASSWORD: root
-    #         MYSQL_DATABASE: laravel_db_name
-    #         MYSQL_USER: laravel_db_user
-    #         MYSQL_PASSWORD: laravel_db_pass
+1. Cloner le dépôt
 
-    ####################################################################################################
-    # phpMyAdmin
-    ####################################################################################################
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        ports:
-            - 8080:80
-        links:
-            - db
-        environment:
-            PMA_HOST: db
-            PMA_PORT: 3306
-            PMA_ARBITRARY: 1
-        volumes:
-            - .docker/phpmyadmin/sessions:/sessions
-
-    ####################################################################################################
-    # Adminer
-    ####################################################################################################
-    adminer:
-        image: adminer
-        ports:
-            - 9090:8080
-        depends_on:
-            - db
-
-    ####################################################################################################
-    # Mailpit
-    ####################################################################################################
-    mail:
-        image: axllent/mailpit:latest
-        ports:
-            - 8025:8025
-            - 1025:1025
-
-    ####################################################################################################
-    # Redis
-    ####################################################################################################
-    redis:
-        image: redis:latest
-        command: redis-server --appendonly yes
-        volumes:
-            - .docker/redis/data:/data
-        ports:
-            - "6379:6379"
-
-    ####################################################################################################
-    # Minio
-    ####################################################################################################
-    minio:
-        image: 'minio/minio:latest'
-        ports:
-            - '9000:9000'
-            - '8900:8900'
-        container_name: minio_storage
-        environment:
-            MINIO_ROOT_USER: minio
-            MINIO_ROOT_PASSWORD: minio123
-        volumes:
-            - .docker/minio/data:/data
-            - .docker/minio/config:/root/.minio
-        command: 'minio server /data/minio --console-address ":8900"'
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-            retries: 3
-            timeout: 5s
-
+```shell
+git clone https://github.com/benaja-bendo/bgr-dashboard-01.git
+cd bgr-dashboard-01
 ```
+
+2. Installer les dépendances
+
+```shell
+composer install
+```
+
+3. Créer un fichier `.env` à partir du modèle `.env.example`
+
+```shell
+cp .env.example .env
+```
+
+4. Générer une clé d’application
+
+```shell
+php artisan key:generate
+```
+
+5. Configurer les variables d’environnement dans le fichier `.env`
+
+6. Créer la base de données et exécuter les migrations
+
+```shell
+php artisan migrate --seed
+```
+
+7. Démarrer le serveur de développement
+
+```shell
+php artisan serve
+```
+
+## Utilisation
+L’API expose plusieurs endpoints pour gérer les cours et les étudiants. Pour plus de détails, consultez la documentation OpenAPI disponible à l’URL /documentation.json.
+
+### Exemple d'Endpoints
+
+- Liste des cours :
+  - `GET` /api/v1/courses
+- Créer un cours :
+  - `POST` /api/v1/courses
+- Récupérer un cours spécifique :
+  - `GET` /api/v1/courses/{id}
+- Mettre à jour un cours :
+  - `PUT` /api/v1/courses/{id}
+- Supprimer un cours :
+  - `DELETE` /api/v1/courses/{id}
+
+## Tests
+
+Pour exécuter les tests unitaires et d’intégration, utilisez la commande suivante :
+
+```shell
+php artisan test
+```
+Les tests couvrent principalement le backend, avec une couverture étendue des fonctionnalités critiques.
+
+## Licence
+
+Ce projet est sous licence MIT. Pour plus d’informations, consultez le fichier `LICENSE`.
+
+
 

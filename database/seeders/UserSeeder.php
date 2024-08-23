@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         $root = \App\Models\User::factory()->create([
             'last_name' => 'Root User',
-            'email' => 'root@gmail.com',
+            'email' => 'root@example.com',
         ]);
         $root->assignRole(RolesEnum::root->value);
 

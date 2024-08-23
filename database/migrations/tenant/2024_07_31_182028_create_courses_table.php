@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug');
             $table->text('description')->nullable(true);
             $table->boolean('is_premium')->default(false);
+            $table->unsignedBigInteger('states_courses_id');
             $table->foreign('states_courses_id')->references('id')->on('states_courses')->onUpdate('cascade');
             $table->timestamps();
         });
