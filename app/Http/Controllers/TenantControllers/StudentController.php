@@ -5,7 +5,7 @@ namespace App\Http\Controllers\TenantControllers;
 use App\Enums\RolesEnum;
 use App\Exports\StudentsExport;
 use App\Exports\StudentsTemplateExport;
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentTenantCollection;
 use App\Http\Resources\StudentTenantResource;
 use App\Imports\StudentImport;
@@ -18,7 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use OpenApi\Attributes as OA;
 
-class StudentController extends ApiController
+class StudentController extends Controller
 {
     #[OA\Get(
         path: "/api/v1/students",

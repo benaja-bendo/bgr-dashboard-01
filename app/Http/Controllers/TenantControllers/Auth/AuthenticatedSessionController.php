@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\TenantControllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\UserTenantResource;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use App\Http\Controllers\ApiController;
 
 
-class AuthenticatedSessionController extends ApiController
+class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle an incoming authentication request.
